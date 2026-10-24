@@ -1,11 +1,35 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import Cuaderno from '../components/Cuaderno'
+import Timeline from '../components/Timeline'
+
+function DetalleProveedor({ proveedor, onVolver }) {
+  return (
+    <div className="detalle-panel">
+      <div className="detalle-header">
+        <button className="btn-volver" onClick={onVolver}>
+          ← Volver
+        </button>
+        <div className="detalle-info">
+          <h1 className="detalle-nombre">{proveedor.nombre}</h1>
+          <div className="detalle-meta">
+            {proveedor.rubro && <span>📦 {proveedor.rubro}</span>}
+            {proveedor.contacto && <span>👤 {proveedor.contacto}</span>}
+            {proveedor.telefono && <span>📞 {proveedor.telefono}</span>}
+            {proveedor.email && <span>✉️ {proveedor.email}</span>}
+          </div>
+        </div>
+      </div>
+      <div className="detalle-body">
+        <Timeline entidadTipo="proveedor" entidadId={proveedor.id} />
+      </div>
+    </div>
+  )
+}
 
 export default function Proveedores() {
   const [proveedores, setProveedores] = useState([])
   const [loading, setLoading] = useState(true)
-  const [abierto, setAbierto] = useState(null)
+  const [detalle, setDetalle] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [filtro, setFiltro] = useState('')
   const [form, setForm] = useState({ nombre: '', contacto: '', telefono: '', email: '', rubro: '' })
@@ -25,6 +49,11 @@ export default function Proveedores() {
     setForm({ nombre: '', contacto: '', telefono: '', email: '', rubro: '' })
     setShowModal(false)
     cargar()
+  }
+
+  // Vista fullscreen del detalle
+  if (detalle) {
+    return <DetalleProveedor proveedor={detalle} onVolver={() => setDetalle(null)} />
   }
 
   const lista = proveedores.filter(p =>
@@ -50,17 +79,17 @@ export default function Proveedores() {
       ) : (
         <div className="grid">
           {lista.map(p => (
-            <div key={p.id}>
-              <div className="card" onClick={() => setAbierto(abierto === p.id ? null : p.id)}>
-                <div className="card-name">{p.nombre}</div>
-                {p.rubro && <div className="card-sub">📦 {p.rubro}</div>}
-                {p.contacto && <div className="card-sub">👤 {p.contacto}</div>}
-                {p.telefono && <div className="card-sub">📞 {p.telefono}</div>}
-                {p.email && <div className="card-sub">✉️ {p.email}</div>}
-              </div>
-              {abierto === p.id && (
-                <Cuaderno entidadTipo="proveedor" entidadId={p.id} />
-              )}
+            <div
+              key={p.id}
+              className="card card-clickable"
+              onClick={() => setDetalle(p)}
+            >
+              <div className="card-name">{p.nombre}</div>
+              {p.rubro && <div className="card-sub">📦 {p.rubro}</div>}
+              {p.contacto && <div className="card-sub">👤 {p.contacto}</div>}
+              {p.telefono && <div className="card-sub">📞 {p.telefono}</div>}
+              {p.email && <div className="card-sub">✉️ {p.email}</div>}
+              <div className="card-arrow">→</div>
             </div>
           ))}
         </div>

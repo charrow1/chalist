@@ -1,12 +1,36 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import Cuaderno from '../components/Cuaderno'
+import Timeline from '../components/Timeline'
+
+function DetalleEmpleado({ empleado, onVolver }) {
+  return (
+    <div className="detalle-panel">
+      <div className="detalle-header">
+        <button className="btn-volver" onClick={onVolver}>
+          ← Volver
+        </button>
+        <div className="detalle-info">
+          <h1 className="detalle-nombre">{empleado.nombre} {empleado.apellido}</h1>
+          <div className="detalle-meta">
+            {empleado.cargo && <span>💼 {empleado.cargo}</span>}
+            {empleado.sucursales?.nombre && <span>🏪 {empleado.sucursales.nombre}</span>}
+            {empleado.telefono && <span>📞 {empleado.telefono}</span>}
+            {empleado.email && <span>✉️ {empleado.email}</span>}
+          </div>
+        </div>
+      </div>
+      <div className="detalle-body">
+        <Timeline entidadTipo="empleado" entidadId={empleado.id} />
+      </div>
+    </div>
+  )
+}
 
 export default function Empleados() {
   const [empleados, setEmpleados] = useState([])
   const [sucursales, setSucursales] = useState([])
   const [loading, setLoading] = useState(true)
-  const [abierto, setAbierto] = useState(null)
+  const [detalle, setDetalle] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [filtro, setFiltro] = useState('')
   const [form, setForm] = useState({ nombre: '', apellido: '', cargo: '', sucursal_id: '', telefono: '', email: '' })
@@ -32,6 +56,11 @@ export default function Empleados() {
     cargar()
   }
 
+  // Vista fullscreen del detalle
+  if (detalle) {
+    return <DetalleEmpleado empleado={detalle} onVolver={() => setDetalle(null)} />
+  }
+
   const lista = empleados.filter(e =>
     `${e.nombre} ${e.apellido} ${e.cargo}`.toLowerCase().includes(filtro.toLowerCase())
   )
@@ -55,16 +84,16 @@ export default function Empleados() {
       ) : (
         <div className="grid">
           {lista.map(e => (
-            <div key={e.id}>
-              <div className="card" onClick={() => setAbierto(abierto === e.id ? null : e.id)}>
-                <div className="card-name">{e.nombre} {e.apellido}</div>
-                {e.cargo && <div className="card-sub">💼 {e.cargo}</div>}
-                {e.sucursales?.nombre && <div className="card-sub">🏪 {e.sucursales.nombre}</div>}
-                {e.telefono && <div className="card-sub">📞 {e.telefono}</div>}
-              </div>
-              {abierto === e.id && (
-                <Cuaderno entidadTipo="empleado" entidadId={e.id} />
-              )}
+            <div
+              key={e.id}
+              className="card card-clickable"
+              onClick={() => setDetalle(e)}
+            >
+              <div className="card-name">{e.nombre} {e.apellido}</div>
+              {e.cargo && <div className="card-sub">💼 {e.cargo}</div>}
+              {e.sucursales?.nombre && <div className="card-sub">🏪 {e.sucursales.nombre}</div>}
+              {e.telefono && <div className="card-sub">📞 {e.telefono}</div>}
+              <div className="card-arrow">→</div>
             </div>
           ))}
         </div>

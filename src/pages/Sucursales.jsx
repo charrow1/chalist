@@ -1,11 +1,35 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import Cuaderno from '../components/Cuaderno'
+import Timeline from '../components/Timeline'
+
+function DetalleSucursal({ sucursal, onVolver }) {
+  return (
+    <div className="detalle-panel">
+      <div className="detalle-header">
+        <button className="btn-volver" onClick={onVolver}>
+          ← Volver
+        </button>
+        <div className="detalle-info">
+          <h1 className="detalle-nombre">{sucursal.nombre}</h1>
+          <div className="detalle-meta">
+            {sucursal.encargado && <span>👤 {sucursal.encargado}</span>}
+            {sucursal.direccion && <span>📍 {sucursal.direccion}</span>}
+            {sucursal.telefono && <span>📞 {sucursal.telefono}</span>}
+            <span className="badge badge-green">Activa</span>
+          </div>
+        </div>
+      </div>
+      <div className="detalle-body">
+        <Timeline entidadTipo="sucursal" entidadId={sucursal.id} />
+      </div>
+    </div>
+  )
+}
 
 export default function Sucursales() {
   const [sucursales, setSucursales] = useState([])
   const [loading, setLoading] = useState(true)
-  const [abierta, setAbierta] = useState(null)
+  const [detalle, setDetalle] = useState(null)
   const [showModal, setShowModal] = useState(false)
   const [filtro, setFiltro] = useState('')
   const [form, setForm] = useState({ nombre: '', direccion: '', telefono: '', encargado: '' })
@@ -25,6 +49,11 @@ export default function Sucursales() {
     setForm({ nombre: '', direccion: '', telefono: '', encargado: '' })
     setShowModal(false)
     cargar()
+  }
+
+  // Vista fullscreen del detalle
+  if (detalle) {
+    return <DetalleSucursal sucursal={detalle} onVolver={() => setDetalle(null)} />
   }
 
   const lista = sucursales.filter(s => s.nombre.toLowerCase().includes(filtro.toLowerCase()))
@@ -52,19 +81,19 @@ export default function Sucursales() {
       ) : (
         <div className="grid">
           {lista.map(s => (
-            <div key={s.id}>
-              <div className="card" onClick={() => setAbierta(abierta === s.id ? null : s.id)}>
-                <div className="card-name">{s.nombre}</div>
-                {s.encargado && <div className="card-sub">👤 {s.encargado}</div>}
-                {s.direccion && <div className="card-sub">📍 {s.direccion}</div>}
-                {s.telefono && <div className="card-sub">📞 {s.telefono}</div>}
-                <div style={{ marginTop: 8 }}>
-                  <span className="badge badge-green">Activa</span>
-                </div>
+            <div
+              key={s.id}
+              className="card card-clickable"
+              onClick={() => setDetalle(s)}
+            >
+              <div className="card-name">{s.nombre}</div>
+              {s.encargado && <div className="card-sub">👤 {s.encargado}</div>}
+              {s.direccion && <div className="card-sub">📍 {s.direccion}</div>}
+              {s.telefono && <div className="card-sub">📞 {s.telefono}</div>}
+              <div style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="badge badge-green">Activa</span>
+                <span className="card-arrow">→</span>
               </div>
-              {abierta === s.id && (
-                <Cuaderno entidadTipo="sucursal" entidadId={s.id} />
-              )}
             </div>
           ))}
         </div>
