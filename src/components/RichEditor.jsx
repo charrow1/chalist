@@ -156,7 +156,7 @@ export default function RichEditor({ value, onChange, placeholder = 'Escribí aq
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        rows={5}
+        rows={8}
         className="rich-textarea"
         onKeyDown={e => {
           // Enter en una línea de checkbox o lista → continúa el prefijo

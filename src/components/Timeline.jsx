@@ -326,7 +326,7 @@ export default function Timeline({ entidadTipo, entidadId }) {
       {/* Modal crear */}
       {modal && (
         <div className="modal-overlay" onClick={ev => ev.target === ev.currentTarget && setModal(null)}>
-          <div className="modal">
+          <div className={`modal${modal === 'nota' || modal === 'tema' ? ' modal-wide' : ''}`}>
             <div className="modal-title">
               {TIPOS.find(t => t.id === modal)?.emoji} Nueva {modal === 'tarea' ? 'tarea' : modal === 'tema' ? 'tema' : 'nota'}
             </div>
