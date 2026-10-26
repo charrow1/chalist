@@ -24,8 +24,8 @@ export function parseContenido(texto) {
       return `<div class="ck-check"><span class="ck-box"></span><span class="ck-text">${parseLine(resto)}</span></div>`
     }
     // Lista
-    if (linea.match(/^-\s+/)) {
-      const resto = linea.replace(/^-\s+/, '')
+    if (linea.match(/^[-•]\s+/)) {
+      const resto = linea.replace(/^[-•]\s+/, '')
       return `<div class="ck-li">• ${parseLine(resto)}</div>`
     }
     // Línea vacía
@@ -121,7 +121,7 @@ export default function RichEditor({ value, onChange, placeholder = 'Escribí aq
         <button type="button" className="tb-btn" title="Negrita" onClick={() => insertAt('**', '**')}><b>B</b></button>
         <button type="button" className="tb-btn" title="Itálica" onClick={() => insertAt('_', '_')}><i>I</i></button>
         <div className="tb-sep" />
-        <button type="button" className="tb-btn" title="Lista" onClick={() => insertLine('- ')}>≡</button>
+        <button type="button" className="tb-btn" title="Lista" onClick={() => insertLine('• ')}>≡</button>
         <button type="button" className="tb-btn" title="Checkbox" onClick={() => insertLine('[] ')}>☐</button>
         <div className="tb-sep" />
         <button
@@ -169,7 +169,7 @@ export default function RichEditor({ value, onChange, placeholder = 'Escribí aq
             let prefijo = ''
             if (lineActual.match(/^\[\]\s+\S/)) prefijo = '[] '
             else if (lineActual.match(/^\[x\]\s+\S/i)) prefijo = '[] '
-            else if (lineActual.match(/^-\s+\S/)) prefijo = '- '
+            else if (lineActual.match(/^[-•]\s+\S/)) prefijo = '• '
             if (prefijo) {
               e.preventDefault()
               const nuevo = value.slice(0, start) + '\n' + prefijo + value.slice(start)
