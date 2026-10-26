@@ -684,6 +684,212 @@ input:focus, textarea:focus, select:focus {
   color: var(--accent);
 }
 
+/* ── Rich Editor ─────────────────────────────────── */
+.rich-editor {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.rich-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.tb-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: var(--fg2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.tb-btn:hover {
+  background: var(--border);
+  color: var(--fg);
+}
+
+.tb-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+.tag-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.tag-input {
+  flex: 1;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.rich-textarea {
+  border: none !important;
+  border-radius: 0 !important;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 10px 12px;
+}
+
+.rich-textarea:focus {
+  outline: none;
+  border-color: transparent !important;
+  box-shadow: none;
+}
+
+.rich-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+/* Tags */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  background: color-mix(in srgb, var(--tag-color) 15%, transparent);
+  color: var(--tag-color);
+  border: 1px solid color-mix(in srgb, var(--tag-color) 30%, transparent);
+}
+
+.tag-remove {
+  font-size: 14px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0 1px;
+}
+
+.tag-remove:hover { opacity: 1; }
+
+/* Rich content renderizado */
+.tl-rich-content {
+  font-size: 14px;
+  color: var(--fg);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.tl-rich-content .ck-p,
+.tl-rich-content .ck-br {
+  margin-bottom: 2px;
+}
+
+.tl-rich-content .ck-li {
+  padding-left: 4px;
+  margin-bottom: 2px;
+  color: var(--fg2);
+}
+
+.tl-rich-content .ck-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.tl-rich-content .ck-box {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.tl-rich-content .ck-box.done {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.tl-rich-content .ck-text.done {
+  text-decoration: line-through;
+  color: var(--fg3);
+}
+
+.tl-rich-content .ck-tag {
+  display: inline-flex;
+  padding: 1px 6px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.tl-rich-content strong { font-weight: 700; }
+.tl-rich-content em { font-style: italic; color: var(--fg2); }
+
+/* Acciones en el timeline */
+.tl-acciones {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.tl-item:hover .tl-acciones {
+  opacity: 1;
+}
+
+.tl-btn-edit,
+.tl-btn-delete {
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.tl-btn-edit:hover { background: var(--surface2); }
+.tl-btn-delete:hover { background: var(--red-bg); }
+
+/* Edición inline */
+.entrada-edit {
+  padding: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  margin-bottom: 4px;
+}
+
+/* ── Media queries ───────────────────────────────── */
 @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
@@ -701,5 +907,8 @@ input:focus, textarea:focus, select:focus {
   }
   .timeline-acciones {
     gap: 6px;
+  }
+  .tl-acciones {
+    opacity: 1; /* En mobile siempre visibles */
   }
 }
